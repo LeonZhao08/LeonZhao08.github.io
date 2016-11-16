@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!--
+Student Info: Name=LiangZhao , ID=15247
+Subject: CS557A_HW1_Summer_2016
+Author: zhao_zl_
+Filename: tamplate.html
+Date and Time: Jul 8, 2016 2:45:04 PM
+Project Name: CS557_15247
+-->
+<html>
+    <head>
+        <title>Game Center</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" media="screen and (min-width: 480px)" href="css/index_web.css" />
+        <link rel="stylesheet" type="text/css" media="screen and (max-width: 480px)" href="css/index_mobile.css" />
+        <style>
+            body{
+                width: 100%;
+                margin: 0px;
+            }
+
+            header{
+                width: 100%;
+                height: 2.5em;
+                text-align: center;
+            }
+
+            header img{
+                height: 3em;
+            }
+
+            #nav ul{
+                list-style:none;
+                padding-top: 0.5em;
+
+            }
+
+            #nav ul a{
+                text-decoration: #600;
+                color: white;
+            }
+
+            #gamePanel{
+                width:45em;  
+                min-height: 10em;
+                height: auto;
+                border: 1px solid #600;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            #mixedWords{
+                width: 100%;
+                min-height: 4em;
+                height: auto;
+                float: none;
+            }
+
+            #anwsonWords{
+                width: 100%;
+                min-height: 3em;
+                height: auto;
+                float: none;
+            }
+
+            .wordPanel_above{
+                width: 4em;
+                height: 4em;
+                border: 1px solid #600 ;
+                float: left;
+                margin-left: 1em;
+                margin-top: 0.5em;
+            }
+            .wordPanel_above img{
+                width: 100%;
+                height: 100%;
+            }
+
+            .wordPanel_following{
+                width: 4em;
+                height: 4em;
+                border: 1px solid #600 ;
+                float: left;
+                margin-left: 1em;
+                margin-top: 0.5em;
+                margin-bottom: 1em;
+            }
+
+            .wordPanel_following img{
+                width: 100%;
+                height: 100%;
+            }
+
+            #controlPanel{
+                width: 60%;
+                min-height: 4em;
+                height: auto;
+                margin-left: auto;
+                margin-right: auto;
+                padding-top: 2em;
+            }
+
+            footer{
+                width: 100%;
+                height: 1.5em;
+                position: fixed;
+                bottom: 0px;
+                text-align: center;
+                background: url("images/back.png");
+                color: white;
+            }
+
+        </style>
+    </head>
+    <body>
+        <header ><img alt="" src="images/title.png" /></header>
+
+        <div id="nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="register.html">Register</a></li>
+                <li><a href="#">Game</a></li>
+                <li><a href="log.html">Logs</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </div>
+
+        <aside><img alt="" id="ad" src="images/ad1.jpg" /> </aside>
+
+        <div id="article"> 
+            <div><h1>Player:<span id="userName">Name</span></h1></div>
+            <div id="gamePanel" align="center">
+                <div id="mixedWords">
+                </div><br>
+
+                <div id="anwsonWords">
+                </div>
+            </div>
+
+            <div id="controlPanel">
+                <button id="buildGameBt">New Game</button>
+                <button id="cancelGameBt">Cancel</button>
+                <span id="timer">
+                    Using Time:<input type="text" id="oT" style="text-align:right;" readonly=readonly />
+                </span>
+            </div>
+        </div>
+
+        <footer>
+            copyright &copy; Liang_Zhao 15247   2016
+        </footer>
+
+        <script>
+
+            var words = ["CIVILIAN", "PHONE", "TIMEZONE"];
+            var currentWord = "";
+            var userName = "";
+            var currentWordArr = [];
+            var statrDate;
+            var endDate;
+
+            var interval, reg = /^\d$/,
+                    sleep = 1000,
+                    sum = 0;
+            //change ad images
+            function changeAd() {
+                var imgName = document.getElementById("ad").getAttribute("src");
+                if (imgName === "images/ad1.jpg") {
+                    document.getElementById("ad").setAttribute("src", "images/ad2.jpg");
+                } else {
+                    document.getElementById("ad").setAttribute("src", "images/ad1.jpg");
+                }
+            }
+
+            function Timer() {
+                //invoke changeAD every 30s
+                window.setInterval("changeAd()", 30000);
+            }
+
+            window.onload = function () {
+                checkLogin();
+                Timer();
+                //buildGame();
+                document.getElementById("buildGameBt").disabled = false;
+                document.getElementById("cancelGameBt").disabled = true;
+                document.getElementById("timer").style.display = "none";
+                buildGameBt.onclick = function () {
+                    buildGame();
+                    GameTimer();
+                };
+                cancelGameBt.onclick = function () {
+                    cancelGame();
+                };
+            };
+
+            // feature functions 
+            function checkLogin() {
+                if (localStorage.GameCurrentUser === undefined) {
+                    alert("you need login to paly the game");
+                    window.location.href = "login.html";
+                    return;
+                }else{
+                    var b = JSON.parse(localStorage.GameCurrentUser);
+                    userName = b.userName ;
+                    document.getElementById("userName").innerHTML = userName;
+                }
+            }
+
+            function buildGame() {
+                var numOfWords = words.length;
+                var num = Math.floor(Math.random() * numOfWords);
+                var word = words[num];
+                currentWord = word;
+                currentWordArr = word.split("");
+                var currWordArr = word.split("");
+                currWordArr.sort(function () {
+                    return 0.5 - Math.random();
+                });
+                var html_a = "";
+                var html_b = "";
+                for (var i = 0; i < currWordArr.length; i++) {
+                    html_a += "<div class='wordPanel_above' ondrop='drop(event)' ondragover='allowDrop(event)'><img id='"
+                            + i + "' alt='" + currWordArr[i] + "' src='images/"
+                            + currWordArr[i] + ".png' draggable='true' ondragstart='drag(event)' /></div>";
+                    html_b += "<div class='wordPanel_following' ondrop='drop(event)' ondragover='allowDrop(event)'></div>";
+                }
+                document.getElementById("mixedWords").innerHTML = html_a;
+                document.getElementById("anwsonWords").innerHTML = html_b;
+                document.getElementById("buildGameBt").disabled = true;
+                document.getElementById("cancelGameBt").disabled = false;
+                document.getElementById("timer").style.display = "";
+            }
+
+            function checkGame() {
+                var divs = document.getElementsByClassName("wordPanel_following");
+                for (var i = 0; i < currentWordArr.length; i++) {
+                    var a = divs[i].getElementsByTagName("img")[0];
+                    if (divs[i].getElementsByTagName("img")[0] === undefined) {
+                        return false;
+                    }
+                    if (a.alt !== currentWordArr[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function GameTimer() {
+                if (!interval) {
+                    startDate = new Date();
+                    interval = setInterval(function () {
+                        sum++;
+                        var d = new Date("1111/1/1,0:0:0");
+                        d.setSeconds(sum);
+                        var h = d.getHours();
+                        h = reg.test(h) ? "0" + h + ":" : h + ":";
+                        var m = d.getMinutes();
+                        m = reg.test(m) ? "0" + m + ":" : m + ":";
+                        var s = d.getSeconds();
+                        s = reg.test(s) ? "0" + s : s;
+                        oT.value = h + m + s;
+                        //check time out
+                        if (timeOut(sum)) {
+                            GameTimer();
+                            recordGame("Time Out");
+                            oT.value = "";
+                            sum = 0;
+                        }
+                    }, sleep);
+                } else {
+                    clearInterval(interval);
+                    interval = null;
+                }
+            }
+
+            function timeOut(sum) {
+                if (sum >= 180) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            function cancelGame() {
+                GameTimer();
+                recordGame("Canceled");
+            }
+
+            function recordGame(result) {
+                document.getElementById("timer").style.display = "none";
+                endDate = new Date();
+                var log = {"userName": userName ,"startDate":startDate.toUTCString(), "endDate":endDate.toUTCString(), "gameWord":currentWord, "result":result};
+                var b = [];
+                if (localStorage.GameLogs !== undefined) {
+                    b = JSON.parse(localStorage.GameLogs);
+                }
+                b.push(log);
+                localStorage.GameLogs = JSON.stringify(b);
+                gameOver();     
+            }
+
+            function gameOver() {
+                document.getElementById("mixedWords").innerHTML = "";
+                document.getElementById("anwsonWords").innerHTML = "";
+                document.getElementById("buildGameBt").disabled = false;
+                document.getElementById("cancelGameBt").disabled = true;
+            }
+
+            // drag and drop
+            function allowDrop(event) {
+                event.preventDefault();
+            }
+
+            function drag(event) {
+                event.dataTransfer.setData("text", event.target.id);
+            }
+
+            function drop(event) {
+                event.preventDefault();
+                var data = event.dataTransfer.getData("text");
+                event.target.appendChild(document.getElementById(data));
+                if (checkGame()) {
+                    //win
+                    GameTimer();
+                    recordGame("Win");
+                    alert("You Win !");
+                }
+            }
+        </script>
+    </body>
+</html>

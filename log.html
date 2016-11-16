@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--
+Student Info: Name=LiangZhao , ID=15247
+Subject: CS557A_HW1_Summer_2016
+Author: zhao_zl_
+Filename: tamplate.html
+Date and Time: Jul 8, 2016 2:45:04 PM
+Project Name: CS557_15247
+-->
+<html>
+    <head>
+        <title>Game Center</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" media="screen and (min-width: 480px)" href="css/index_web.css" />
+        <link rel="stylesheet" type="text/css" media="screen and (max-width: 480px)" href="css/index_mobile.css" />
+        <style>
+            body{
+                width: 100%;
+                margin: 0px;
+            }
+
+            header{
+                width: 100%;
+                height: 2.5em;
+                text-align: center;
+            }
+
+            header img{
+                height: 3em;
+            }
+
+            #nav ul{
+                list-style:none;
+                padding-top: 0.5em;
+
+            }
+
+            #nav ul a{
+                text-decoration: #600;
+                color: white;
+            }
+
+            #article table{
+                border-collapse: collapse;
+                border: 0.1em solid #600;
+                min-width: 100px;
+                width: 90%;
+            }
+
+            #article table tr{
+                height: 2em;
+            }
+
+            #article table td{
+                border: 0.1em solid #600;
+            }
+
+            footer{
+                width: 100%;
+                height: 1.5em;
+                position: fixed;
+                bottom: 0px;
+                text-align: center;
+                background: url("images/back.png");
+                color: white;
+            }
+
+        </style>
+    </head>
+    <body>
+        <header ><img src="images/title.png" /></header>
+        <div id="nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="register.html">Register</a></li>
+                <li><a href="game.html">Game</a></li>
+                <li><a href="#">Logs</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </div>
+        <aside><img id="ad" src="images/ad1.jpg" /> </aside>
+        <div id="article"> 
+            <h1>Logs Page</h1>
+            <center>
+                <div id="logTable">
+                </div>
+                
+            </center>
+        </div>
+        <footer>
+            copyright &copy; Liang_Zhao 15247   2016
+        </footer>
+
+        <script>
+            //change ad images
+            function changeAd() {
+                var imgName = document.getElementById("ad").getAttribute("src");
+                if (imgName === "images/ad1.jpg") {
+                    document.getElementById("ad").setAttribute("src", "images/ad2.jpg");
+                } else {
+                    document.getElementById("ad").setAttribute("src", "images/ad1.jpg");
+                }
+            }
+
+            function Timer() {
+                //invoke changeAD every 30s
+                window.setInterval("changeAd()", 3000);
+            }
+
+            window.onload = function () {
+                loadLogs();
+                Timer();
+
+            };
+
+            function showTable(html) {
+                document.getElementById("logTable").innerHTML = html;
+            }
+
+            function loadLogs() {
+                var html = "<table><tr><td> Player Name </td><td>" +
+                        " Start Date And Time </td><td> End Date And Time " +
+                        "</td><td> Game Word </td><td> Result </td></tr>";
+
+                if (localStorage.GameLogs === undefined) {
+                    html += "</table>";
+                    showTable(html);
+                    return;
+                }
+                var b = JSON.parse(localStorage.GameLogs);
+
+                for (var i = 0; i < b.length; i++) {
+                    html += "<tr>";
+                    html += "<td>" + b[i].userName + "</td>" +
+                            "<td>" + b[i].startDate + "</td>" +
+                            "<td>" + b[i].endDate + "</td>" +
+                            "<td>" + b[i].gameWord + "</td>" +
+                            "<td>" + b[i].result + "</td>";
+                    html += "</tr>";
+                }
+                html += "</table>";
+                showTable(html);
+            }
+
+
+        </script>
+    </body>
+</html>

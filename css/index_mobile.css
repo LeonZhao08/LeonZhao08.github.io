@@ -1,0 +1,43 @@
+/*
+Student Info: Name=LiangZhao , ID=15247
+Subject: CS557A_HW1_Summer_2016
+Author: zhao_zl_
+Filename: index_mobile.css
+Date and Time: Jul 8, 2016 4:31:00 PM
+Project Name: CS557_15247
+*/
+/* 
+    Created on : Jul 8, 2016, 4:31:00 PM
+    Author     : zhao_zl_
+*/
+
+#nav{
+    width: 100%;
+    height: 10em;
+    border-bottom: 1px solid #600;
+    text-align: left;
+    background: url("../images/back.png");
+    margin-bottom: 0.2em;
+}
+
+#nav li{
+    padding-top: 0.3em;
+    padding-bottom: 0.3em; 
+}
+
+aside{
+    width: 100%;
+    height: 10em;
+    text-align: center;
+}
+
+aside img{
+    width: 100%;
+    height: 10em;
+}
+
+#article{
+    width: 100%;
+    height: 25em;
+    text-align: center;
+}
